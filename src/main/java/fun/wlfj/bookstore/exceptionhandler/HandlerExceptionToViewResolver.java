@@ -33,7 +33,8 @@ public class HandlerExceptionToViewResolver implements HandlerExceptionResolver 
     	ModelAndView mv = new ModelAndView();
 
     	mv.setViewName("error_page");
-    	mv.addObject("error_cause", helper.getMsg(exception.getClass().toString()));
+    	//mv.addObject("error_cause", helper.getMsg(exception.getClass().toString()));
+    	mv.addObject("error_cause", ex.toString());
     	return mv;
     }
 }
