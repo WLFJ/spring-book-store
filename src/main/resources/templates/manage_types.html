@@ -130,7 +130,7 @@
     <tr th:each="book,iterStat : ${type.getBooks()}">
       <th scope="row" th:text="${iterStat.count}">1</th>
       <td th:text="${book.getBookName()}">《如何让孩子爱上学习》</td>
-      <td><img width="100" height="40%" role="img" th:src="'/showImg/' + ${book.getBookCover()}"></td>
+      <td><img width="40%" height="40%" role="img" th:src="'/showImg/' + ${book.getBookCover()}"></td>
       <td th:text="${book.getBookPrice()}">100</td>
     </tr>
   </tbody>
