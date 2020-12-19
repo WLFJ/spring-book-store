@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author"
+	content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+<meta name="generator" content="Jekyll v4.0.1">
+<title>图书馆</title>
+
+<link rel="canonical" href="http://lodalhost:8080/book/details">
+
+<!-- Bootstrap core CSS -->
+<link href="/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+	crossorigin="anonymous">
+
+<!-- Favicons -->
+<link rel="apple-touch-icon"
+	href="/docs/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/assets/img/favicons/favicon-32x32.png"
+	sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/assets/img/favicons/favicon-16x16.png"
+	sizes="16x16" type="image/png">
+<link rel="manifest" href="/docs/assets/img/favicons/manifest.json">
+<link rel="mask-icon"
+	href="/docs/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+<link rel="icon" href="/docs/assets/img/favicons/favicon.ico">
+<meta name="msapplication-config"
+	content="/docs/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#563d7c">
+
+
+<style>
+.bd-placeholder-img {
+	font-size: 1.125rem;
+	text-anchor: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@media ( min-width : 768px) {
+	.bd-placeholder-img-lg {
+		font-size: 3.5rem;
+	}
+}
+</style>
+<!-- Custom styles for this template -->
+<link href="/css/album.css" rel="stylesheet">
+</head>
+<body>
+	<header>
+		<div class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container d-flex justify-content-between">
+				<a href="/" class="navbar-brand d-flex align-items-center"> <svg
+						xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+						fill="none" stroke="currentColor" stroke-linecap="round"
+						stroke-linejoin="round" stroke-width="2" aria-hidden="true"
+						class="mr-2" viewBox="0 0 24 24" focusable="false">
+						<path
+							d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+						<circle cx="12" cy="13" r="4" /></svg> <strong>图书馆</strong>
+				</a>
+				<div class="collapse navbar-collapse" id="navbarsExample04">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item" th:classappend="${currentType} == null ? 'active'"><a class="nav-link" href="/">全部图书</a></li>
+						<li th:each="type : ${types}" class="nav-item" th:classappend="${currentType} != null and ${currentType.getTypeId()} == ${type.typeId} ? 'active'" th:hidden="!${type_r}"><a class="nav-link" href="#" th:href="'/types/' + ${type.typeId}" th:text="${type.typeName}">Link</a></li>
+					</ul>
+					<div class="navbar-nav" th:hidden="!${type_x}">
+						<a class="nav-link" href="/types/manage">管理分类</a>
+					</div>
+					<div class="navbar-nav" th:hidden="!${user_x}">
+						<a class="nav-link" href="/manage">管理用户</a>
+					</div>
+					<div class="navbar-nav" th:hidden="!${book_x}">
+						<a class="nav-link" href="/search">高级搜索</a>
+					</div>
+					<div class="navbar-nav">
+					<!-- 这里要检查用户身份 展示不同的提示 -->
+						<span class="badge badge-secondary" th:text="${session.user} != null ? ${session.user.getUserGroup().getGroupName()} + '-' + ${session.user.getUserName()} : '未登陆'">管理员-wlfj</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main role="main">
+
+		<section class="jumbotron text-center">
+			<div class="container">
+				<h1 th:text="${currentType} == null ? '图书馆' : ${currentType.typeName} + '分类的相关书籍'">图书馆</h1>
+				<p class="lead text-muted" th:text="${currentType} == null ? '下面都是很好的书，主要和编程、算法、大数据相关，我知道看书肯定枯燥，但是锤炼人的思维。' : ${currentType.getTypeDescription()}">下面都是很好的书，主要和编程、算法、大数据相关，我知道看书肯定枯燥，但是锤炼人的思维。</p>
+				<p>
+					<a href="/add"
+						class="btn btn-secondary my-2" th:hidden="!${book_w}">添加书籍</a> <a
+						th:unless="${session.isLogined}" href="/login"
+						class="btn btn-success my-2">登陆</a>
+					<!-- 现在我们要看是否登陆了 -->
+					<!-- 现在这里需要转换一下 -->
+					<a th:if="${session.isLogined}" href="/logout"
+						class="btn btn-warning my-2">退出登录</a>
+				</p>
+			</div>
+		</section>
+
+		<div class="album py-5 bg-light">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-4" th:each="book : ${wyw1813004316books }">
+						<div class="card mb-4 shadow-sm">
+							<img class="card-img-top" width="100%" height="400" role="img"
+								th:src="${book.getBookCover()}? '/showImg/' + ${book.getBookCover()} : './img/default.png' " />
+							<div class="card-body">
+								<p class="card-text">
+									<strong th:text="${book.getBookName() }">Linux大学教程</strong>
+								<div th:text="'书号-' + ${book.getBookId() }">书号-1234</div>
+								</p>
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<a type="button" href="/detail"
+											th:attrappend="href=${'?wyw1813004316id=' + book.getBookId()}"
+											class="btn btn-sm btn-outline-secondary" th:hidden="!${book_r}">详情</a> <a
+											type="button" th:if="${session.isLogined}" href="/delete"
+											th:attrappend="href=${'?wyw1813004316id=' + book.getBookId()}"
+											class="btn btn-sm btn-outline-danger" th:hidden="!${book_w}">删除</a> <a type="button"
+											th:if="${session.isLogined}" href="/modify"
+											th:attrappend="href=${'?wyw1813004316id=' + book.getBookId()}"
+											class="btn btn-sm btn-outline-warning" th:hidden="!${book_w}">修改</a>
+									</div>
+									<big class="text-primary" color="red"
+										th:text="'¥' + ${book.getBookPrice() }">¥100</big>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+	<footer class="text-muted">
+		<div class="container">
+			<p class="float-right">
+				<a href="#">返回顶部</a>
+			</p>
+
+			<p>本页面由Bootstrap驱动。</p>
+		</div>
+	</footer>
+	<script src="/js/jquery.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="/js/jquery.slim.min.js"><\/script>')</script>
+	<script src="/js/bootstrap.bundle.min.js"
+		integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd"
+		crossorigin="anonymous"></script>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.wlfj.bookstore.dao.BookDao">
+	<resultMap id="bookMap" type="Book">
+		<id property="bookId" column="id"/>
+		<result property="bookName" column="name"/>
+		<result property="bookPrice" column="price"/>
+		<result property="bookCover" column="cover"/>
+		<result property="bookDetail" column="detail"/>
+		<collection property="bookType" javaType="BookType"
+			column="type" select="fun.wlfj.bookstore.dao.TypeDao.getTypeById"></collection>
+	</resultMap>
+	<insert id="addBook" parameterType="Book" useGeneratedKeys="true" keyProperty="bookId">
+		insert into tb_book(name, type, price, cover, detail)
+		values(#{bookName}, #{bookType.typeId}, #{bookPrice}, #{bookCover}, #{bookDetail});
+	</insert>
+	<delete id="deleteBook" parameterType="Integer">
+		delete from tb_book
+		where id=#{bookId};	
+	</delete>
+	<update id="updateBook" parameterType="Book">
+		update tb_book set
+		name=#{bookName},
+		type=#{bookType.typeId},
+		price=#{bookPrice},
+		cover=#{bookCover},
+		detail=#{bookDetail}
+		where id=#{bookId};
+	</update>
+	<select id="getBookById" parameterType="Integer" resultMap="bookMap">
+		select * from tb_book
+		where id=#{bookId};	
+	</select>
+	<select id="queryBooks" parameterType="BookQuery" resultMap="bookMap">
+		select * from tb_book, tb_types
+		where 1=1
+		and tb_book.type = tb_types.id
+		<!-- 这里需要处理连接符号的问题 事实上这里就不应该使用连接查询啊 -->
+		<if test="bookId!=null and bookId!=''">
+			and id=#{bookId}
+		</if>	
+		<if test="bookName!=null and bookName!=''">
+			and tb_book.name like concat('%', #{bookName}, '%')
+		</if>	
+		<if test="bookType!=null and bookType!=''">
+			and tb_types.name like concat('%', #{bookType}, '%')
+		</if>	
+		<if test="bookDetail!=null">
+			and detail like concat('%', #{bookDetail}, '%')
+		</if>	
+		<if test="bookPrice_low!=null">
+			and price <![CDATA[ >= ]]> #{bookPrice_low}
+		</if>	
+		<if test="bookPrice_high!=null">
+			and price <![CDATA[ <= ]]> #{bookPrice_high}
+		</if>	
+	</select>
+	<select id="getBookByTypeId" parameterType="Integer" resultMap="bookMap">
+		select * from tb_book
+		where type=#{typeId};	
+	</select>
+</mapper>

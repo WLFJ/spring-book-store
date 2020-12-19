@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 设置驼峰表示法--> <!--
+<settings>
+<setting name="mapUnderscoreToCamelCase" value="true" />
+</settings> -->
+<typeAliases>
+	<!-- 如何设置别名？从而简化mapper中的对象名称 -->
+	<package name="fun.wlfj.bookstore.entity"/>
+	<package name="fun.wlfj.bookstore.query"/>
+	<!-- 用于简化单个类的名称 -->
+	<!--
+	<typeAlias name="" alias=""></typeAlias>  -->
+</typeAliases>
+</configuration>

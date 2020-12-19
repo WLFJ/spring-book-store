@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "yves.password",
+    "type": "java.lang.String",
+    "description": "A description for 'yves.password'"
+  },
+  {
+    "name": "yves.username",
+    "type": "java.lang.String",
+    "description": "A description for 'yves.username'"
+  },
+  {
+    "name": "yves.upload.path",
+    "type": "java.lang.String",
+    "description": "A description for 'yves.upload.path'"
+  },
+  {
+    "name": "yves.new-user-group",
+    "type": "java.lang.String",
+    "description": "A description for 'yves.new-user-group'"
+  }
+]}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.wlfj.bookstore.dao.UserGroupDao">
+	<resultMap id="groupMap" type="UserGroup">
+		<id property="groupId" column="id"/>
+		<result property="groupName" column="name"/>
+		<result property="bookPermission" column="book_info_permission"/>
+		<result property="typePermission" column="types_permission"/>
+		<result property="userPermission" column="user_permission"/>
+		<collection property="users" javaType="List" ofType="User" column="id"
+		select="fun.wlfj.bookstore.dao.UserDao.getUserByGroupId"/>
+	</resultMap>
+	<insert id="addGroup" parameterType="UserGroup" useGeneratedKeys="true" keyProperty="groupId">
+		insert into tb_usergroups(name, book_info_permission, types_permission, user_permission) values(#{groupName}, #{bookPermission}, #{typePermission}, #{userPermission});
+	</insert>
+	<delete id="deleteGroup" parameterType="UserGroup">
+		delete from tb_usergroups where id=#{groupId};
+	</delete>
+	<update id="updateGroup" parameterType="UserGroup">
+		update tb_usergroups set
+		name=#{groupName},
+		book_info_permission=#{bookPermission},
+		types_permission=#{typePermission},
+		user_permission=#{userPermission}
+		where id=#{groupId};
+	</update>
+	<select id="getGroups" resultMap="groupMap">
+		select * from tb_usergroups;	
+	</select>
+	<select id="getGroupGyId" parameterType="Integer" resultMap="groupMap">
+		select * from tb_usergroups where id=#{groupId};
+	</select>
+</mapper>
