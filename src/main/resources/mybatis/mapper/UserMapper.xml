@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 	  	name=#{userName},
 	  	password=#{passWord},
 	  	usergroup=#{userGroup.groupId}
-	  	where id=#{userId}
+	  	where id=#{userId};
 	</update>
 	<select id="getUserByUserName" parameterType="String" resultMap="userMap">
 		select * from tb_user where name=#{userName};
